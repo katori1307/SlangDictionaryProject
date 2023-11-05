@@ -8,6 +8,15 @@ import java.util.HashMap;
 
 public class SlangDictionaryScreen extends JFrame {
     private SearchSlangScreen searchScreen;
+    private JButton searchSlangButton;
+    private JButton searchDefinitionButton;
+    private JButton showHistoryButton;
+    private JButton addNewSlangButton;
+    private JButton editSlangButton;
+    private JButton deleteSlangButton;
+    private JButton resetSlangDictionaryButton;
+    private JButton randomSlangButton;
+    private JButton miniGameButton;
     public SlangDictionaryScreen() {
         CreateMainScreen();
     }
@@ -40,15 +49,15 @@ public class SlangDictionaryScreen extends JFrame {
         layout.setVgap(10);
         menuPanel.setLayout(layout);
         menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JButton searchSlangButton = new JButton("Search slang");
-        JButton searchDefinitionButton = new JButton("Search definition");
-        JButton showHistoryButton = new JButton("Show history");
-        JButton addNewSlangButton = new JButton("Add new slang");
-        JButton editSlangButton = new JButton("Edit slang");
-        JButton deleteSlangButton = new JButton("Delete slang");
-        JButton resetSlangDictionaryButton = new JButton("Reset slang dictionary");
-        JButton randomSlangButton = new JButton("Random slang");
-        JButton miniGameButton = new JButton("Mini game with slang");
+        searchSlangButton = new JButton("Search slang");
+        searchDefinitionButton = new JButton("Search definition");
+        showHistoryButton = new JButton("Show history");
+        addNewSlangButton = new JButton("Add new slang");
+        editSlangButton = new JButton("Edit slang");
+        deleteSlangButton = new JButton("Delete slang");
+        resetSlangDictionaryButton = new JButton("Reset slang dictionary");
+        randomSlangButton = new JButton("Random slang");
+        miniGameButton = new JButton("Mini game with slang");
         menuPanel.add(searchSlangButton);
         menuPanel.add(searchDefinitionButton);
         menuPanel.add(showHistoryButton);
@@ -60,35 +69,39 @@ public class SlangDictionaryScreen extends JFrame {
         menuPanel.add(miniGameButton);
 
         // initialize other screens
-        searchScreen = new SearchSlangScreen();
+//        searchScreen = new SearchSlangScreen();
 
-        handleButtonEvent(searchSlangButton);
+//        handleButtonEvent(searchSlangButton);
 
         return menuPanel;
     }
-    private void handleButtonEvent(JButton btn) {
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                searchScreen = new SearchSlangScreen();
-                // set visible for other screens and dispose the current screen.
-                searchScreen.setVisible(true);
-                dispose();
-            }
-        });
-    }
+//    private void handleButtonEvent(JButton btn) {
+//        btn.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+////                searchScreen = new SearchSlangScreen();
+//                // set visible for other screens and dispose the current screen.
+//                searchScreen.setVisible(true);
+//                dispose();
+//            }
+//        });
+//    }
     private void setCursorCenter() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - 700) / 2;
         int y = (screenSize.height - 500) / 2;
         setLocation(x, y);
     }
+    public void addSearchSlangScreenBtnListener(ActionListener listener) {
+        searchSlangButton.addActionListener(listener);
+    }
     public void getSearchBtnActionListener(ActionListener listener) {
         searchScreen.addSearchBtnListener(listener);
     }
-    public void showDictionary(HashMap<String, String> dictionary) {
-        searchScreen.printDictionary(dictionary);
-    }
+//    public void showDictionary(HashMap<String, String> dictionary) {
+//        searchScreen.printDictionary(dictionary);
+//    }
+
 //    public static void main(String[] args) {
 //        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 //            public void run() {
@@ -96,9 +109,5 @@ public class SlangDictionaryScreen extends JFrame {
 //            }
 //        });
 //    }
-
-
-
-
 
 }

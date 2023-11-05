@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class SearchSlangScreen extends JFrame {
     private JButton searchBtn;
+    private JButton goBackBtn;
     private DefaultTableModel model;
     public SearchSlangScreen() {
         createSearchSlangScreen();
@@ -22,7 +23,7 @@ public class SearchSlangScreen extends JFrame {
         add(createMainPanel());
         setCursorCenter();
         pack();
-        setVisible(true);
+//        setVisible(true);
     }
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
@@ -41,8 +42,8 @@ public class SearchSlangScreen extends JFrame {
     private JPanel createFormControl() {
         JPanel formControlPanel = new JPanel();
         searchBtn = new JButton("Search for definitions");
-        JButton goBackBtn = new JButton("Go back");
-        handleGoBackBtn(goBackBtn);
+        goBackBtn = new JButton("Go back");
+//        handleGoBackBtn(goBackBtn);
         formControlPanel.add(new JTextField(20));
         formControlPanel.add(searchBtn);
         formControlPanel.add(goBackBtn);
@@ -66,16 +67,16 @@ public class SearchSlangScreen extends JFrame {
 
         return tablePanel;
     }
-    private void handleGoBackBtn(JButton goBackBtn) {
-        goBackBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SlangDictionaryScreen slangDictionaryScreen = new SlangDictionaryScreen();
-                slangDictionaryScreen.setVisible(true);
-                dispose();
-            }
-        });
-    }
+//    private void handleGoBackBtn(JButton goBackBtn) {
+//        goBackBtn.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                SlangDictionaryScreen slangDictionaryScreen = new SlangDictionaryScreen();
+//                slangDictionaryScreen.setVisible(true);
+//                dispose();
+//            }
+//        });
+//    }
     private void setCursorCenter() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - 700) / 2;
@@ -84,6 +85,10 @@ public class SearchSlangScreen extends JFrame {
     }
     public void addSearchBtnListener(ActionListener listener) {
         searchBtn.addActionListener(listener);
+    }
+
+    public void addGoBackBtnListener(ActionListener listener) {
+        goBackBtn.addActionListener(listener);
     }
 
     public void printDictionary(HashMap<String, String> dictionary) {
