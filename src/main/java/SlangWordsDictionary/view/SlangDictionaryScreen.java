@@ -68,24 +68,8 @@ public class SlangDictionaryScreen extends JFrame {
         menuPanel.add(randomSlangButton);
         menuPanel.add(miniGameButton);
 
-        // initialize other screens
-//        searchScreen = new SearchSlangScreen();
-
-//        handleButtonEvent(searchSlangButton);
-
         return menuPanel;
     }
-//    private void handleButtonEvent(JButton btn) {
-//        btn.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-////                searchScreen = new SearchSlangScreen();
-//                // set visible for other screens and dispose the current screen.
-//                searchScreen.setVisible(true);
-//                dispose();
-//            }
-//        });
-//    }
     private void setCursorCenter() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - 700) / 2;
@@ -98,9 +82,30 @@ public class SlangDictionaryScreen extends JFrame {
     public void getSearchBtnActionListener(ActionListener listener) {
         searchScreen.addSearchBtnListener(listener);
     }
-//    public void showDictionary(HashMap<String, String> dictionary) {
-//        searchScreen.printDictionary(dictionary);
-//    }
+    public void addSearchDefinitionScreenBtnListener(ActionListener listener) {
+        searchDefinitionButton.addActionListener(listener);
+    }
+    public void addShowHistoryBtnListener(ActionListener listener) {
+        showHistoryButton.addActionListener(listener);
+    }
+    public void addAddNewSlangBtnListener(ActionListener listener) {
+        addNewSlangButton.addActionListener(listener);
+    }
+    public void addEditSlangBtnListener(ActionListener listener) {
+        editSlangButton.addActionListener(listener);
+    }
+    public void addDeleteSlangBtnListener(ActionListener listener) {
+        deleteSlangButton.addActionListener(listener);
+    }
+    public void addResetSlangDictionaryBtnListener(ActionListener listener) {
+        resetSlangDictionaryButton.addActionListener(listener);
+    }
+    public void addRandomSlangBtnListener(ActionListener listener) {
+        randomSlangButton.addActionListener(listener);
+    }
+    public void addMiniGameBtnListener(ActionListener listener) {
+        miniGameButton.addActionListener(listener);
+    }
 
 //    public static void main(String[] args) {
 //        javax.swing.SwingUtilities.invokeLater(new Runnable() {

@@ -12,6 +12,22 @@ public class SearchSlangScreen extends JFrame {
     private JButton searchBtn;
     private JButton goBackBtn;
     private DefaultTableModel model;
+    private JTextField inputField;
+    private JLabel label;
+    private JPanel mainPanel;
+    private JPanel headingPanel;
+
+    public void setLabelContent(String content) {
+        label.setText(content);
+//        System.out.println(labelContent);
+    }
+    public void resetTableData() {
+        model.setRowCount(0);
+    }
+
+    public String getInputFromTextField() {
+        return this.inputField.getText();
+    }
     public SearchSlangScreen() {
         createSearchSlangScreen();
     }
@@ -22,29 +38,31 @@ public class SearchSlangScreen extends JFrame {
         setPreferredSize(new Dimension(600, 400));
         add(createMainPanel());
         setCursorCenter();
+
         pack();
 //        setVisible(true);
     }
     private JPanel createMainPanel() {
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(20, 0));
-
+//        System.out.println(labelContent);
         mainPanel.add(createHeadingPanel(), BorderLayout.NORTH);
         mainPanel.add(createFormControl(), BorderLayout.CENTER);
         mainPanel.add(createResTable(), BorderLayout.SOUTH);
         return mainPanel;
     }
     private JPanel createHeadingPanel() {
-        JPanel headingPanel = new JPanel();
-        headingPanel.add(new JLabel("Input a slang to search for definitions"));
+        headingPanel = new JPanel();
+        label = new JLabel("");
+        headingPanel.add(label);
         return headingPanel;
     }
     private JPanel createFormControl() {
         JPanel formControlPanel = new JPanel();
-        searchBtn = new JButton("Search for definitions");
+        searchBtn = new JButton("Search");
         goBackBtn = new JButton("Go back");
-//        handleGoBackBtn(goBackBtn);
-        formControlPanel.add(new JTextField(20));
+        inputField = new JTextField(20);
+        formControlPanel.add(inputField);
         formControlPanel.add(searchBtn);
         formControlPanel.add(goBackBtn);
 
@@ -67,16 +85,7 @@ public class SearchSlangScreen extends JFrame {
 
         return tablePanel;
     }
-//    private void handleGoBackBtn(JButton goBackBtn) {
-//        goBackBtn.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                SlangDictionaryScreen slangDictionaryScreen = new SlangDictionaryScreen();
-//                slangDictionaryScreen.setVisible(true);
-//                dispose();
-//            }
-//        });
-//    }
+
     private void setCursorCenter() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - 700) / 2;

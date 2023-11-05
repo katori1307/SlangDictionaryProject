@@ -3,11 +3,27 @@ package SlangWordsDictionary.models;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SlangDictionary {
     private HashMap<String, String> slangDictionary;
+    private HashMap<String, String> history;
+    private ArrayList<String> slangHistory;
+    private ArrayList<String> defHistory;
 
+    public ArrayList<String> getDefHistory() {
+        return defHistory;
+    }
+
+    public ArrayList<String> getSlangHistory() {
+        return slangHistory;
+    }
+
+    public HashMap<String, String> getHistory() {
+        return history;
+    }
     public HashMap<String, String> getSlangDictionary() {
         return slangDictionary;
     }
@@ -16,8 +32,17 @@ public class SlangDictionary {
         this.slangDictionary = slangDictionary;
     }
 
+    public void updateSlangHistory(String data) {
+        slangHistory.add(data);
+    }
+    public void updateDefHistory(String data) {
+        defHistory.add(data);
+    }
+
     public SlangDictionary() {
         slangDictionary = new HashMap<>();
+        slangHistory = new ArrayList<>();
+        defHistory = new ArrayList<>();
         // load data from slang.txt
         loadDataFromTextFile("./src/main/java/data/slang.txt");
     }
