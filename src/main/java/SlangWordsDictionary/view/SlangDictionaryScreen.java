@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class SlangDictionaryScreen extends JFrame {
-
+    private SearchSlangScreen searchScreen;
     public SlangDictionaryScreen() {
         CreateMainScreen();
     }
@@ -20,23 +21,18 @@ public class SlangDictionaryScreen extends JFrame {
         pack();
         setVisible(true);
     }
-
     private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout(20, 0));
         mainPanel.add(createHeadingPanel(), BorderLayout.NORTH);
         mainPanel.add(createMenuPanel(), BorderLayout.CENTER);
-
-
         return mainPanel;
     }
-
     private JPanel createHeadingPanel() {
         JPanel headingPn = new JPanel();
         headingPn.add(new JLabel("Slang Dictionary"));
         return headingPn;
     }
-
     private JPanel createMenuPanel() {
         JPanel menuPanel = new JPanel();
         GridLayout layout = new GridLayout(0,3);
@@ -63,35 +59,45 @@ public class SlangDictionaryScreen extends JFrame {
         menuPanel.add(randomSlangButton);
         menuPanel.add(miniGameButton);
 
+        // initialize other screens
+        searchScreen = new SearchSlangScreen();
+
         handleButtonEvent(searchSlangButton);
 
         return menuPanel;
     }
-
     private void handleButtonEvent(JButton btn) {
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SearchSlangScreen searchSlangScreen = new SearchSlangScreen();
-                searchSlangScreen.setVisible(true);
+//                searchScreen = new SearchSlangScreen();
+                // set visible for other screens and dispose the current screen.
+                searchScreen.setVisible(true);
                 dispose();
             }
         });
     }
-
     private void setCursorCenter() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - 700) / 2;
         int y = (screenSize.height - 500) / 2;
         setLocation(x, y);
     }
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                SlangDictionaryScreen mainScreen = new SlangDictionaryScreen();
-            }
-        });
+    public void getSearchBtnActionListener(ActionListener listener) {
+        searchScreen.addSearchBtnListener(listener);
     }
+    public void showDictionary(HashMap<String, String> dictionary) {
+        searchScreen.printDictionary(dictionary);
+    }
+//    public static void main(String[] args) {
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                SlangDictionaryScreen mainScreen = new SlangDictionaryScreen();
+//            }
+//        });
+//    }
+
+
 
 
 

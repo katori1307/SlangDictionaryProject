@@ -6,20 +6,45 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class SlangDictionary {
-    private final HashMap<String, String> slangDictionary;
+    private HashMap<String, String> slangDictionary;
+
+    public HashMap<String, String> getSlangDictionary() {
+        return slangDictionary;
+    }
+
+    public void setSlangDictionary(HashMap<String, String> slangDictionary) {
+        this.slangDictionary = slangDictionary;
+    }
 
     public SlangDictionary() {
         slangDictionary = new HashMap<>();
         // load data from slang.txt
+        loadDataFromTextFile("./src/main/java/data/slang.txt");
     }
 
     private void loadDataFromTextFile(String filePath) {
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // handle uploading data from slang.txt
-
+            String line = "";
+            // skip the first line.
+            line = br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("`");
+                if(parts.length == 2) {
+                    String slang = parts[0].trim();
+                    String definitions = parts[1].replace("|", ",").trim();
+                    slangDictionary.put(slang, definitions);
+                }
+            }
+//            System.out.println("Read file successfully");
         } catch (IOException e) {
-            e.getMessage();
+            System.out.println("Cannot read file. Error: " + e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        SlangDictionary slangDictionary = new SlangDictionary();
+//        System.out.println(System.getProperty("user.dir"));
     }
 
 

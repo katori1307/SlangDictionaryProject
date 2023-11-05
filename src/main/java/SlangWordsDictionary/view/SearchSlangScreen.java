@@ -5,8 +5,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchSlangScreen extends JFrame {
+    private JButton searchBtn;
+    private DefaultTableModel model;
     public SearchSlangScreen() {
         createSearchSlangScreen();
     }
@@ -36,7 +40,7 @@ public class SearchSlangScreen extends JFrame {
     }
     private JPanel createFormControl() {
         JPanel formControlPanel = new JPanel();
-        JButton searchBtn = new JButton("Search for definitions");
+        searchBtn = new JButton("Search for definitions");
         JButton goBackBtn = new JButton("Go back");
         handleGoBackBtn(goBackBtn);
         formControlPanel.add(new JTextField(20));
@@ -47,11 +51,19 @@ public class SearchSlangScreen extends JFrame {
     }
     private JPanel createResTable() {
         JPanel tablePanel = new JPanel();
-        DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
+        model.addColumn("Slang");
+        model.addColumn("Definition");
+//        model.addRow(new Object[]{"#1", "Number one"});
         JTable resTable = new JTable(model);
+        resTable.getTableHeader().setResizingAllowed(false);
+        resTable.getTableHeader().setReorderingAllowed(false);
+        resTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+        resTable.getColumnModel().getColumn(1).setPreferredWidth(400);
         JScrollPane scrollPane = new JScrollPane(resTable);
         scrollPane.setPreferredSize(new Dimension(500, 275));
         tablePanel.add(scrollPane);
+
         return tablePanel;
     }
     private void handleGoBackBtn(JButton goBackBtn) {
@@ -69,6 +81,17 @@ public class SearchSlangScreen extends JFrame {
         int x = (screenSize.width - 700) / 2;
         int y = (screenSize.height - 500) / 2;
         setLocation(x, y);
+    }
+    public void addSearchBtnListener(ActionListener listener) {
+        searchBtn.addActionListener(listener);
+    }
+
+    public void printDictionary(HashMap<String, String> dictionary) {
+        for(Map.Entry<String, String> entry: dictionary.entrySet()) {
+            String slang = entry.getKey();
+            String definitions = entry.getValue();
+            model.addRow(new Object[]{slang, definitions});
+        }
     }
 
 //    public static void main(String[] args) {
