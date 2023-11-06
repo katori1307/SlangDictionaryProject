@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SlangDictionary {
     private HashMap<String, String> slangDictionary;
@@ -30,6 +31,13 @@ public class SlangDictionary {
     }
     public void updateSlangDictionary(String slang, String def) {
         slangDictionary.put(slang, def);
+    }
+    public void overwriteSlang(String slang, String def) {
+        for(Map.Entry<String, String> entry: slangDictionary.entrySet()) {
+            if(Objects.equals(entry.getKey(), slang)) {
+                entry.setValue(def);
+            }
+        }
     }
 
     public void setSlangDictionary(HashMap<String, String> slangDictionary) {

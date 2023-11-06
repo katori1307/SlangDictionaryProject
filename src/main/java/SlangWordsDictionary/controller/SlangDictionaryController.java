@@ -1,10 +1,7 @@
 package SlangWordsDictionary.controller;
 
 import SlangWordsDictionary.models.SlangDictionary;
-import SlangWordsDictionary.view.AddAndEditSlangScreen;
-import SlangWordsDictionary.view.HistoryScreen;
-import SlangWordsDictionary.view.SearchSlangScreen;
-import SlangWordsDictionary.view.SlangDictionaryScreen;
+import SlangWordsDictionary.view.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,13 +17,17 @@ public class SlangDictionaryController {
     private HistoryScreen historyScreen;
     private AddAndEditSlangScreen addSlangScreen;
     private AddAndEditSlangScreen editSlangScreen;
+    private ConfirmScreen delConfirmScreen;
+    private ConfirmScreen duplicateScreen;
     public SlangDictionaryController(SlangDictionaryScreen screen,
                                      SlangDictionary dictionaryModel,
                                      SearchSlangScreen searchScreen,
                                      SearchSlangScreen searchDefinitionScreen,
                                      HistoryScreen historyScreen,
                                      AddAndEditSlangScreen addSlangScreen,
-                                     AddAndEditSlangScreen editSlangScreen) {
+                                     AddAndEditSlangScreen editSlangScreen,
+                                     ConfirmScreen delConfirmScreen,
+                                     ConfirmScreen duplicateScreen) {
         this.screen = screen;
         this.dictionaryModel = dictionaryModel;
         this.searchScreen = searchScreen;
@@ -34,6 +35,8 @@ public class SlangDictionaryController {
         this.historyScreen = historyScreen;
         this.addSlangScreen = addSlangScreen;
         this.editSlangScreen = editSlangScreen;
+        this.delConfirmScreen = delConfirmScreen;
+        this.duplicateScreen = duplicateScreen;
         // handle button event for tasks.
         screen.addSearchSlangScreenBtnListener(new searchSlangScreenBtnListener());
         screen.addSearchDefinitionScreenBtnListener(new searchDefinitionScreenBtnListener());
@@ -148,16 +151,48 @@ public class SlangDictionaryController {
             HashMap<String, String> slangDict = dictionaryModel.getSlangDictionary();
             for(Map.Entry<String, String> entry: slangDict.entrySet()) {
                 if(Objects.equals(entry.getKey(), inputSlang)) {
-                    addSlangScreen.addSlangToTable("Slang already existed", "");
+                    duplicateScreen.setVisible(true);
+                    duplicateScreen.addDuplicateBtnListener(new duplicateSlangBtnListener(inputSlang, inputDef));
+                    duplicateScreen.addOverwriteBtnListener(new overwriteSlangBtnListener(inputSlang, inputDef));
                     return;
                 }
             }
-            if(inputSlang.contains("`")) {
-                addSlangScreen.addSlangToTable("Invalid slang input", "");
-            } else {
-                addSlangScreen.addSlangToTable(inputSlang, inputDef);
-                dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
-            }
+//            if(inputSlang.contains("`")) {
+//                addSlangScreen.addSlangToTable("Invalid slang input", "");
+//            } else {
+//                addSlangScreen.addSlangToTable(inputSlang, inputDef);
+//                dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
+//            }
+            addSlangScreen.addSlangToTable(inputSlang, inputDef);
+            dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
+        }
+    }
+    class duplicateSlangBtnListener implements ActionListener {
+        private String slang;
+        private String def;
+        duplicateSlangBtnListener(String slang, String def) {
+            this.slang = slang;
+            this.def = def;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            addSlangScreen.addSlangToTable(slang, def);
+            dictionaryModel.updateSlangDictionary(slang, def);
+            duplicateScreen.dispose();
+        }
+    }
+    class overwriteSlangBtnListener implements ActionListener {
+        private String slang;
+        private String def;
+        overwriteSlangBtnListener(String slang, String def) {
+            this.slang = slang;
+            this.def = def;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            addSlangScreen.addSlangToTable(slang, def);
+            dictionaryModel.overwriteSlang(slang, def);
+            duplicateScreen.dispose();
         }
     }
 
@@ -170,8 +205,11 @@ public class SlangDictionaryController {
         HistoryScreen historyScreen = new HistoryScreen();
         AddAndEditSlangScreen addSlangScreen = new AddAndEditSlangScreen("add");
         AddAndEditSlangScreen editSlangScreen = new AddAndEditSlangScreen("edit");
+        ConfirmScreen delConfirmScreen = new ConfirmScreen("confirmDel");
+        ConfirmScreen duplicateScreen = new ConfirmScreen("duplicateSlang");
         SlangDictionaryController controller = new SlangDictionaryController(screen, dictionaryModel,
                                                     searchSlangScreen, searchDefinitionScreen,
-                                                    historyScreen, addSlangScreen, editSlangScreen);
+                                                    historyScreen, addSlangScreen, editSlangScreen,
+                                                    delConfirmScreen, duplicateScreen);
     }
 }
