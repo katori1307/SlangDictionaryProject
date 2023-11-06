@@ -39,7 +39,9 @@ public class SlangDictionaryScreen extends JFrame {
     }
     private JPanel createHeadingPanel() {
         JPanel headingPn = new JPanel();
-        headingPn.add(new JLabel("Slang Dictionary"));
+        JLabel mainLabel = new JLabel("Slang Dictionary");
+        mainLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        headingPn.add(mainLabel);
         return headingPn;
     }
     private JPanel createMenuPanel() {
@@ -49,15 +51,33 @@ public class SlangDictionaryScreen extends JFrame {
         layout.setVgap(10);
         menuPanel.setLayout(layout);
         menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        Font textFont = new Font("Arial", Font.BOLD, 16);
         searchSlangButton = new JButton("Search slang");
+        searchSlangButton.setFont(textFont);
+
         searchDefinitionButton = new JButton("Search definition");
+        searchDefinitionButton.setFont(textFont);
+
         showHistoryButton = new JButton("Show history");
+        showHistoryButton.setFont(textFont);
+
         addNewSlangButton = new JButton("Add new slang");
+        addNewSlangButton.setFont(textFont);
+
         editSlangButton = new JButton("Edit slang");
+        editSlangButton.setFont(textFont);
+
         deleteSlangButton = new JButton("Delete slang");
+        deleteSlangButton.setFont(textFont);
+
         resetSlangDictionaryButton = new JButton("Reset slang dictionary");
+        resetSlangDictionaryButton.setFont(textFont);
+
         randomSlangButton = new JButton("Random slang");
+        randomSlangButton.setFont(textFont);
+
         miniGameButton = new JButton("Mini game with slang");
+        miniGameButton.setFont(textFont);
         menuPanel.add(searchSlangButton);
         menuPanel.add(searchDefinitionButton);
         menuPanel.add(showHistoryButton);

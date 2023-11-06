@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class SlangDictionary {
     private HashMap<String, String> slangDictionary;
+    private HashMap<String, String> oldDictionary;
     private HashMap<String, String> history;
     private ArrayList<String> slangHistory;
     private ArrayList<String> defHistory;
@@ -26,6 +27,9 @@ public class SlangDictionary {
     }
     public HashMap<String, String> getSlangDictionary() {
         return slangDictionary;
+    }
+    public void updateSlangDictionary(String slang, String def) {
+        slangDictionary.put(slang, def);
     }
 
     public void setSlangDictionary(HashMap<String, String> slangDictionary) {
@@ -61,6 +65,7 @@ public class SlangDictionary {
                     slangDictionary.put(slang, definitions);
                 }
             }
+            oldDictionary = new HashMap<>(slangDictionary);
 //            System.out.println("Read file successfully");
         } catch (IOException e) {
             System.out.println("Cannot read file. Error: " + e.getMessage());

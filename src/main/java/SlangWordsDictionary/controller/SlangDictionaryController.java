@@ -1,6 +1,7 @@
 package SlangWordsDictionary.controller;
 
 import SlangWordsDictionary.models.SlangDictionary;
+import SlangWordsDictionary.view.AddAndEditSlangScreen;
 import SlangWordsDictionary.view.HistoryScreen;
 import SlangWordsDictionary.view.SearchSlangScreen;
 import SlangWordsDictionary.view.SlangDictionaryScreen;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SlangDictionaryController {
     private SlangDictionaryScreen screen;
@@ -16,22 +18,32 @@ public class SlangDictionaryController {
     private SearchSlangScreen searchDefinitionScreen;
     private SlangDictionary dictionaryModel;
     private HistoryScreen historyScreen;
+    private AddAndEditSlangScreen addSlangScreen;
+    private AddAndEditSlangScreen editSlangScreen;
     public SlangDictionaryController(SlangDictionaryScreen screen,
                                      SlangDictionary dictionaryModel,
                                      SearchSlangScreen searchScreen,
                                      SearchSlangScreen searchDefinitionScreen,
-                                     HistoryScreen historyScreen) {
+                                     HistoryScreen historyScreen,
+                                     AddAndEditSlangScreen addSlangScreen,
+                                     AddAndEditSlangScreen editSlangScreen) {
         this.screen = screen;
         this.dictionaryModel = dictionaryModel;
         this.searchScreen = searchScreen;
         this.searchDefinitionScreen = searchDefinitionScreen;
         this.historyScreen = historyScreen;
+        this.addSlangScreen = addSlangScreen;
+        this.editSlangScreen = editSlangScreen;
         // handle button event for tasks.
         screen.addSearchSlangScreenBtnListener(new searchSlangScreenBtnListener());
         screen.addSearchDefinitionScreenBtnListener(new searchDefinitionScreenBtnListener());
         screen.addShowHistoryBtnListener(new showHistoryBtnListener());
+        screen.addAddNewSlangBtnListener(new newSlangScreenBtnListener());
+        screen.addEditSlangBtnListener(new editSlangScreenBtnListener());
         searchScreen.addGoBackBtnListener(new goBackBtnListener());
         historyScreen.addGoBackBtnListener(new goBackBtnListener());
+        addSlangScreen.addGoBackBtnListener(new goBackBtnListener());
+        addSlangScreen.addAddSlangBtnListener(new addNewSlangBtnListener());
 
         searchScreen.addSearchBtnListener(new searchSlangBtnListener());
         searchDefinitionScreen.addGoBackBtnListener(new goBackBtnListener());
@@ -65,6 +77,23 @@ public class SlangDictionaryController {
             searchScreen.dispose();
             searchDefinitionScreen.dispose();
             historyScreen.dispose();
+            addSlangScreen.dispose();
+        }
+    }
+    class newSlangScreenBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            addSlangScreen.clearTableData();
+            addSlangScreen.setVisible(true);
+            screen.dispose();
+        }
+    }
+    class editSlangScreenBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            editSlangScreen.clearTableData();
+            editSlangScreen.setVisible(true);
+            screen.dispose();
         }
     }
     class searchSlangBtnListener implements ActionListener {
@@ -103,7 +132,6 @@ public class SlangDictionaryController {
             searchDefinitionScreen.printDictionary(res);
         }
     }
-
     class showHistoryBtnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -112,6 +140,27 @@ public class SlangDictionaryController {
             historyScreen.printHistory(dictionaryModel.getSlangHistory(), dictionaryModel.getDefHistory());
         }
     }
+    class addNewSlangBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String inputSlang = addSlangScreen.getInputSlang();
+            String inputDef = addSlangScreen.getInputDefinition();
+            HashMap<String, String> slangDict = dictionaryModel.getSlangDictionary();
+            for(Map.Entry<String, String> entry: slangDict.entrySet()) {
+                if(Objects.equals(entry.getKey(), inputSlang)) {
+                    addSlangScreen.addSlangToTable("Slang already existed", "");
+                    return;
+                }
+            }
+            if(inputSlang.contains("`")) {
+                addSlangScreen.addSlangToTable("Invalid slang input", "");
+            } else {
+                addSlangScreen.addSlangToTable(inputSlang, inputDef);
+                dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         SlangDictionaryScreen screen = new SlangDictionaryScreen();
@@ -119,8 +168,10 @@ public class SlangDictionaryController {
         SearchSlangScreen searchSlangScreen = new SearchSlangScreen();
         SearchSlangScreen searchDefinitionScreen = new SearchSlangScreen();
         HistoryScreen historyScreen = new HistoryScreen();
+        AddAndEditSlangScreen addSlangScreen = new AddAndEditSlangScreen("add");
+        AddAndEditSlangScreen editSlangScreen = new AddAndEditSlangScreen("edit");
         SlangDictionaryController controller = new SlangDictionaryController(screen, dictionaryModel,
                                                     searchSlangScreen, searchDefinitionScreen,
-                                                    historyScreen);
+                                                    historyScreen, addSlangScreen, editSlangScreen);
     }
 }

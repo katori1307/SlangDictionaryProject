@@ -66,6 +66,7 @@ public class HistoryScreen extends JFrame {
         JScrollPane defScrollPane = new JScrollPane(defTable);
 //        defScrollPane.setPreferredSize(new Dimension(200, 200));
         tablePanel.add(defScrollPane);
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         return tablePanel;
     }
     public void printHistory(ArrayList<String> slangHistory, ArrayList<String> defHistory) {
