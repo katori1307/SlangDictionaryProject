@@ -43,13 +43,9 @@ public class SlangDictionaryController {
         screen.addShowHistoryBtnListener(new showHistoryBtnListener());
         screen.addAddNewSlangBtnListener(new newSlangScreenBtnListener());
         screen.addEditSlangBtnListener(new editSlangScreenBtnListener());
-        searchScreen.addGoBackBtnListener(new goBackBtnListener());
-        historyScreen.addGoBackBtnListener(new goBackBtnListener());
-        addSlangScreen.addGoBackBtnListener(new goBackBtnListener());
         addSlangScreen.addAddSlangBtnListener(new addNewSlangBtnListener());
 
         searchScreen.addSearchBtnListener(new searchSlangBtnListener());
-        searchDefinitionScreen.addGoBackBtnListener(new goBackBtnListener());
         searchDefinitionScreen.addSearchBtnListener(new searchDefinitionBtnListener());
 
     }
@@ -59,6 +55,7 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             searchScreen.setLabelContent("INPUT A SLANG TO SEARCH FOR ITS DEFINITIONS");
             searchScreen.resetTableData();
+            searchScreen.addGoBackBtnListener(new goBackBtnListener());
             searchScreen.setVisible(true);
             screen.dispose();
         }
@@ -68,6 +65,7 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             searchDefinitionScreen.setLabelContent("INPUT DEFINITION TO SEARCH FOR THE SLANG");
             searchDefinitionScreen.resetTableData();
+            searchDefinitionScreen.addGoBackBtnListener(new goBackBtnListener());
             searchDefinitionScreen.setVisible(true);
             screen.dispose();
         }
@@ -81,12 +79,13 @@ public class SlangDictionaryController {
             searchDefinitionScreen.dispose();
             historyScreen.dispose();
             addSlangScreen.dispose();
+            editSlangScreen.dispose();
         }
     }
     class newSlangScreenBtnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            addSlangScreen.clearTableData();
+            addSlangScreen.addGoBackBtnListener(new goBackBtnListener());
             addSlangScreen.setVisible(true);
             screen.dispose();
         }
@@ -94,8 +93,9 @@ public class SlangDictionaryController {
     class editSlangScreenBtnListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            editSlangScreen.clearTableData();
             editSlangScreen.setVisible(true);
+            editSlangScreen.addGoBackBtnListener(new goBackBtnListener());
+            editSlangScreen.addEditBtnListener(new editBtnListener());
             screen.dispose();
         }
     }
@@ -140,7 +140,25 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             historyScreen.setVisible(true);
             screen.dispose();
+            historyScreen.addGoBackBtnListener(new goBackBtnListener());
             historyScreen.printHistory(dictionaryModel.getSlangHistory(), dictionaryModel.getDefHistory());
+        }
+    }
+    private void addNewSlangModule(String inputSlang, String inputDef) {
+        HashMap<String, String> slangDict = dictionaryModel.getSlangDictionary();
+        for(Map.Entry<String, String> entry: slangDict.entrySet()) {
+            if(Objects.equals(entry.getKey(), inputSlang)) {
+                duplicateScreen.setVisible(true);
+                duplicateScreen.addDuplicateBtnListener(new duplicateSlangBtnListener(inputSlang, inputDef));
+                duplicateScreen.addOverwriteBtnListener(new overwriteSlangBtnListener(inputSlang, inputDef));
+                return;
+            }
+        }
+        if(inputSlang.contains("`")) {
+            addSlangScreen.addSlangToTable("Invalid slang input", "");
+        } else {
+            addSlangScreen.addSlangToTable(inputSlang, inputDef);
+            dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
         }
     }
     class addNewSlangBtnListener implements ActionListener {
@@ -148,23 +166,7 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             String inputSlang = addSlangScreen.getInputSlang();
             String inputDef = addSlangScreen.getInputDefinition();
-            HashMap<String, String> slangDict = dictionaryModel.getSlangDictionary();
-            for(Map.Entry<String, String> entry: slangDict.entrySet()) {
-                if(Objects.equals(entry.getKey(), inputSlang)) {
-                    duplicateScreen.setVisible(true);
-                    duplicateScreen.addDuplicateBtnListener(new duplicateSlangBtnListener(inputSlang, inputDef));
-                    duplicateScreen.addOverwriteBtnListener(new overwriteSlangBtnListener(inputSlang, inputDef));
-                    return;
-                }
-            }
-//            if(inputSlang.contains("`")) {
-//                addSlangScreen.addSlangToTable("Invalid slang input", "");
-//            } else {
-//                addSlangScreen.addSlangToTable(inputSlang, inputDef);
-//                dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
-//            }
-            addSlangScreen.addSlangToTable(inputSlang, inputDef);
-            dictionaryModel.updateSlangDictionary(inputSlang, inputDef);
+            addNewSlangModule(inputSlang, inputDef);
         }
     }
     class duplicateSlangBtnListener implements ActionListener {
@@ -194,6 +196,44 @@ public class SlangDictionaryController {
             dictionaryModel.overwriteSlang(slang, def);
             duplicateScreen.dispose();
         }
+    }
+
+    class editBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            HashMap<String, String> currentDict = dictionaryModel.getSlangDictionary();
+            String inputSlang = editSlangScreen.getInputSlang();
+            String newSlang = editSlangScreen.getInputNewSlang();
+            String newDef = editSlangScreen.getInputDefinition();
+            for(Map.Entry<String, String> entry: currentDict.entrySet()) {
+                // check if inputSlang existed, then change the definition.
+                if(Objects.equals(entry.getKey(), inputSlang)) {
+                    // check if inputSlang = newSlang, then change the definition
+                    if(Objects.equals(inputSlang, newSlang)) {
+                        entry.setValue(newDef);
+                        editSlangScreen.addSlangToTable(inputSlang, newDef);
+                    }
+                    // check if inputSlang != newSlang, then add new slang.
+                    else {
+                        if(isExistInDictionary(currentDict, newSlang)) {
+                            editSlangScreen.addSlangToTable("Old slang and new slang are already Existed!","");
+                        } else {
+                            addNewSlangModule(newSlang, newDef);
+                            editSlangScreen.addSlangToTable(newSlang, newDef);
+                        }
+                    }
+                    return;
+                }
+            }
+            editSlangScreen.addSlangToTable("Slang does not exist!","");
+        }
+    }
+    private boolean isExistInDictionary(HashMap<String, String> dictionary, String slang) {
+        for(Map.Entry<String, String> entry: dictionary.entrySet()) {
+            if(Objects.equals(entry.getKey(), slang))
+                return true;
+        }
+        return false;
     }
 
 

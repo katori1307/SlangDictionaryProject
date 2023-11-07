@@ -135,11 +135,17 @@ public class AddAndEditSlangScreen extends JFrame {
     public void addAddSlangBtnListener(ActionListener listener) {
         addBtn.addActionListener(listener);
     }
+    public void addEditBtnListener(ActionListener listener) {
+        editBtn.addActionListener(listener);
+    }
     public String getInputSlang() {
         return inputSlang.getText();
     }
     public String getInputDefinition() {
         return inputDef.getText();
+    }
+    public String getInputNewSlang() {
+        return inputNewSlang.getText();
     }
     public void clearTableData() {
         tableModel.setRowCount(0);
