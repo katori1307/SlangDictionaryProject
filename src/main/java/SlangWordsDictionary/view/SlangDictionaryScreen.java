@@ -17,6 +17,7 @@ public class SlangDictionaryScreen extends JFrame {
     private JButton resetSlangDictionaryButton;
     private JButton randomSlangButton;
     private JButton miniGameButton;
+    private JButton miniGameButton_2;
     public SlangDictionaryScreen() {
         CreateMainScreen();
     }
@@ -76,8 +77,12 @@ public class SlangDictionaryScreen extends JFrame {
         randomSlangButton = new JButton("Random slang");
         randomSlangButton.setFont(textFont);
 
-        miniGameButton = new JButton("Mini game with slang");
-        miniGameButton.setFont(textFont);
+        miniGameButton = new JButton("Guess definitions game");
+        miniGameButton.setFont(new Font("Arial", Font.BOLD, 14));
+
+        miniGameButton_2 = new JButton("Guess slang game");
+        miniGameButton_2.setFont(new Font("Arial", Font.BOLD, 16));
+
         menuPanel.add(searchSlangButton);
         menuPanel.add(searchDefinitionButton);
         menuPanel.add(showHistoryButton);
@@ -87,6 +92,7 @@ public class SlangDictionaryScreen extends JFrame {
         menuPanel.add(resetSlangDictionaryButton);
         menuPanel.add(randomSlangButton);
         menuPanel.add(miniGameButton);
+        menuPanel.add(miniGameButton_2);
 
         return menuPanel;
     }

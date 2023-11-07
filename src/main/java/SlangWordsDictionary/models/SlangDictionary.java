@@ -14,6 +14,24 @@ public class SlangDictionary {
     private HashMap<String, String> history;
     private ArrayList<String> slangHistory;
     private ArrayList<String> defHistory;
+    private String tempSlang;
+    private String tempDef;
+
+    public void setTempSlang(String tempSlang) {
+        this.tempSlang = tempSlang;
+    }
+
+    public String getTempSlang() {
+        return tempSlang;
+    }
+
+    public String getTempDef() {
+        return tempDef;
+    }
+
+    public void setTempDef(String tempDef) {
+        this.tempDef = tempDef;
+    }
 
     public ArrayList<String> getDefHistory() {
         return defHistory;
@@ -29,6 +47,9 @@ public class SlangDictionary {
     public HashMap<String, String> getSlangDictionary() {
         return slangDictionary;
     }
+    public HashMap<String, String> getOldDictionary() {
+        return oldDictionary;
+    }
     public void updateSlangDictionary(String slang, String def) {
         slangDictionary.put(slang, def);
     }
@@ -38,6 +59,9 @@ public class SlangDictionary {
                 entry.setValue(def);
             }
         }
+    }
+    public void deleteSlang(String slang) {
+        slangDictionary.remove(slang);
     }
 
     public void setSlangDictionary(HashMap<String, String> slangDictionary) {

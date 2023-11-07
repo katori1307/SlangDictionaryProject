@@ -6,18 +6,19 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class AddAndEditSlangScreen extends JFrame {
+public class ModifySlangScreen extends JFrame {
     private JButton addBtn;
     private JButton editBtn;
+    private JButton deleteBtn;
     private JButton goBackBtn;
     private JTextField inputSlang;
     private JTextField inputDef;
     private JTextField inputNewSlang;
     private DefaultTableModel tableModel;
     private String mode;
-    public AddAndEditSlangScreen(String mode) {
+    public ModifySlangScreen(String mode) {
         this.mode = mode;
-        setTitle("Add Slang");
+        setTitle("MODIFY SLANG");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setDefaultLookAndFeelDecorated(true);
         setPreferredSize(new Dimension(600, 400));
@@ -49,6 +50,8 @@ public class AddAndEditSlangScreen extends JFrame {
             label = new JLabel("Input a slang and its definitions to add");
         } else if(Objects.equals(this.mode, "edit")) {
             label = new JLabel("Input a slang to edit");
+        } else if(Objects.equals(this.mode, "delete")) {
+            label = new JLabel("Input a slang to delete");
         }
         label.setFont(new Font("Arial", Font.BOLD, 18));
         headingPanel.add(label);
@@ -90,10 +93,19 @@ public class AddAndEditSlangScreen extends JFrame {
             editBtn.setLocation(150, 80);
             editBtn.setSize(125,30);
             formPanel.add(editBtn);
+        } else if(Objects.equals(this.mode, "delete")) {
+            JPanel inputSlangPn = createInput("Slang:", inputSlang);
+            inputSlangPn.setSize(400, 30);
+            inputSlangPn.setLocation(100, 25);
+            formPanel.add(inputSlangPn);
+            deleteBtn = new JButton("DELETE SLANG");
+            deleteBtn.setLocation(150, 80);
+            deleteBtn.setSize(130,30);
+            formPanel.add(deleteBtn);
         }
 
         goBackBtn = new JButton("GO BACK");
-        goBackBtn.setLocation(300, 80);
+        goBackBtn.setLocation(320, 80);
         goBackBtn.setSize(125, 30);
 
         formPanel.add(goBackBtn);
@@ -116,8 +128,16 @@ public class AddAndEditSlangScreen extends JFrame {
     private JPanel createResTable() {
         JPanel tablePanel = new JPanel();
         tableModel = new DefaultTableModel();
-        tableModel.addColumn("Slang added");
-        tableModel.addColumn("Definition added");
+        if(Objects.equals(this.mode, "add")) {
+            tableModel.addColumn("Slang added");
+            tableModel.addColumn("Definition added");
+        } else if(Objects.equals(this.mode, "edit")) {
+            tableModel.addColumn("Slang Edited");
+            tableModel.addColumn("Definition Edited");
+        } else if(Objects.equals(this.mode, "delete")) {
+            tableModel.addColumn("Slang deleted");
+            tableModel.addColumn("Definition deleted");
+        }
         JTable resTable = new JTable(tableModel);
         resTable.getTableHeader().setResizingAllowed(false);
         resTable.getTableHeader().setReorderingAllowed(false);
@@ -138,6 +158,9 @@ public class AddAndEditSlangScreen extends JFrame {
     public void addEditBtnListener(ActionListener listener) {
         editBtn.addActionListener(listener);
     }
+    public void addDeleteBtnListener(ActionListener listener) {
+        deleteBtn.addActionListener(listener);
+    }
     public String getInputSlang() {
         return inputSlang.getText();
     }
@@ -156,7 +179,7 @@ public class AddAndEditSlangScreen extends JFrame {
 //    public static void main(String[] args) {
 //        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 //            public void run() {
-//                AddSlangScreen screen = new AddSlangScreen();
+//                ModifySlangScreen screen = new ModifySlangScreen("delete");
 //            }
 //        });
 //    }

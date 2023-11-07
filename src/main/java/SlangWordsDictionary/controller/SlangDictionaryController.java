@@ -5,9 +5,7 @@ import SlangWordsDictionary.view.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class SlangDictionaryController {
     private SlangDictionaryScreen screen;
@@ -15,19 +13,25 @@ public class SlangDictionaryController {
     private SearchSlangScreen searchDefinitionScreen;
     private SlangDictionary dictionaryModel;
     private HistoryScreen historyScreen;
-    private AddAndEditSlangScreen addSlangScreen;
-    private AddAndEditSlangScreen editSlangScreen;
-    private ConfirmScreen delConfirmScreen;
-    private ConfirmScreen duplicateScreen;
+    private ModifySlangScreen addSlangScreen;
+    private ModifySlangScreen editSlangScreen;
+    private ModifySlangScreen deleteSlangScreen;
+    private AlertScreen delConfirmScreen;
+    private AlertScreen resetConfirmScreen;
+    private AlertScreen duplicateScreen;
+    private AlertScreen randomSlangScreen;
     public SlangDictionaryController(SlangDictionaryScreen screen,
                                      SlangDictionary dictionaryModel,
                                      SearchSlangScreen searchScreen,
                                      SearchSlangScreen searchDefinitionScreen,
                                      HistoryScreen historyScreen,
-                                     AddAndEditSlangScreen addSlangScreen,
-                                     AddAndEditSlangScreen editSlangScreen,
-                                     ConfirmScreen delConfirmScreen,
-                                     ConfirmScreen duplicateScreen) {
+                                     ModifySlangScreen addSlangScreen,
+                                     ModifySlangScreen editSlangScreen,
+                                     ModifySlangScreen deleteSlangScreen,
+                                     AlertScreen delConfirmScreen,
+                                     AlertScreen duplicateScreen,
+                                     AlertScreen resetConfirmScreen,
+                                     AlertScreen randomSlangScreen) {
         this.screen = screen;
         this.dictionaryModel = dictionaryModel;
         this.searchScreen = searchScreen;
@@ -37,17 +41,27 @@ public class SlangDictionaryController {
         this.editSlangScreen = editSlangScreen;
         this.delConfirmScreen = delConfirmScreen;
         this.duplicateScreen = duplicateScreen;
+        this.deleteSlangScreen = deleteSlangScreen;
+        this.resetConfirmScreen = resetConfirmScreen;
+        this.randomSlangScreen = randomSlangScreen;
         // handle button event for tasks.
         screen.addSearchSlangScreenBtnListener(new searchSlangScreenBtnListener());
         screen.addSearchDefinitionScreenBtnListener(new searchDefinitionScreenBtnListener());
         screen.addShowHistoryBtnListener(new showHistoryBtnListener());
         screen.addAddNewSlangBtnListener(new newSlangScreenBtnListener());
         screen.addEditSlangBtnListener(new editSlangScreenBtnListener());
-        addSlangScreen.addAddSlangBtnListener(new addNewSlangBtnListener());
+        screen.addDeleteSlangBtnListener(new deleteSlangScreenBtnListener());
+        screen.addResetSlangDictionaryBtnListener(new resetSlangScreenBtnListener());
+        screen.addRandomSlangBtnListener(new randomSlangScreenBtnListener());
 
         searchScreen.addSearchBtnListener(new searchSlangBtnListener());
         searchDefinitionScreen.addSearchBtnListener(new searchDefinitionBtnListener());
-
+        addSlangScreen.addAddSlangBtnListener(new addNewSlangBtnListener());
+        editSlangScreen.addEditBtnListener(new editBtnListener());
+        deleteSlangScreen.addDeleteBtnListener(new deleteSlangBtnListener());
+        delConfirmScreen.addConfirmBtnListener(new confirmDelBtnListener());
+        duplicateScreen.addDuplicateBtnListener(new duplicateSlangBtnListener());
+        duplicateScreen.addOverwriteBtnListener(new overwriteSlangBtnListener());
     }
 
     class searchSlangScreenBtnListener implements ActionListener {
@@ -80,6 +94,10 @@ public class SlangDictionaryController {
             historyScreen.dispose();
             addSlangScreen.dispose();
             editSlangScreen.dispose();
+            deleteSlangScreen.dispose();
+            delConfirmScreen.dispose();
+            resetConfirmScreen.dispose();
+            randomSlangScreen.dispose();
         }
     }
     class newSlangScreenBtnListener implements ActionListener {
@@ -95,7 +113,6 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             editSlangScreen.setVisible(true);
             editSlangScreen.addGoBackBtnListener(new goBackBtnListener());
-            editSlangScreen.addEditBtnListener(new editBtnListener());
             screen.dispose();
         }
     }
@@ -104,6 +121,7 @@ public class SlangDictionaryController {
         public void actionPerformed(ActionEvent e) {
             HashMap<String, String> currentDictionary = dictionaryModel.getSlangDictionary();
             HashMap<String, String> res = new HashMap<>();
+            System.out.println("Is in search event");
             String inputSlang = searchScreen.getInputFromTextField();
             if(currentDictionary.containsKey(inputSlang)) {
                 res.put(inputSlang, currentDictionary.get(inputSlang));
@@ -149,8 +167,8 @@ public class SlangDictionaryController {
         for(Map.Entry<String, String> entry: slangDict.entrySet()) {
             if(Objects.equals(entry.getKey(), inputSlang)) {
                 duplicateScreen.setVisible(true);
-                duplicateScreen.addDuplicateBtnListener(new duplicateSlangBtnListener(inputSlang, inputDef));
-                duplicateScreen.addOverwriteBtnListener(new overwriteSlangBtnListener(inputSlang, inputDef));
+                dictionaryModel.setTempSlang(inputSlang);
+                dictionaryModel.setTempDef(inputDef);
                 return;
             }
         }
@@ -170,28 +188,20 @@ public class SlangDictionaryController {
         }
     }
     class duplicateSlangBtnListener implements ActionListener {
-        private String slang;
-        private String def;
-        duplicateSlangBtnListener(String slang, String def) {
-            this.slang = slang;
-            this.def = def;
-        }
         @Override
         public void actionPerformed(ActionEvent e) {
+            String slang = dictionaryModel.getTempSlang();
+            String def = dictionaryModel.getTempDef();
             addSlangScreen.addSlangToTable(slang, def);
             dictionaryModel.updateSlangDictionary(slang, def);
             duplicateScreen.dispose();
         }
     }
     class overwriteSlangBtnListener implements ActionListener {
-        private String slang;
-        private String def;
-        overwriteSlangBtnListener(String slang, String def) {
-            this.slang = slang;
-            this.def = def;
-        }
         @Override
         public void actionPerformed(ActionEvent e) {
+            String slang = dictionaryModel.getTempSlang();
+            String def = dictionaryModel.getTempDef();
             addSlangScreen.addSlangToTable(slang, def);
             dictionaryModel.overwriteSlang(slang, def);
             duplicateScreen.dispose();
@@ -215,7 +225,7 @@ public class SlangDictionaryController {
                     }
                     // check if inputSlang != newSlang, then add new slang.
                     else {
-                        if(isExistInDictionary(currentDict, newSlang)) {
+                        if(currentDict.containsKey(newSlang)) {
                             editSlangScreen.addSlangToTable("Old slang and new slang are already Existed!","");
                         } else {
                             addNewSlangModule(newSlang, newDef);
@@ -228,28 +238,81 @@ public class SlangDictionaryController {
             editSlangScreen.addSlangToTable("Slang does not exist!","");
         }
     }
-    private boolean isExistInDictionary(HashMap<String, String> dictionary, String slang) {
-        for(Map.Entry<String, String> entry: dictionary.entrySet()) {
-            if(Objects.equals(entry.getKey(), slang))
-                return true;
+    class deleteSlangScreenBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            deleteSlangScreen.setVisible(true);
+            deleteSlangScreen.addGoBackBtnListener(new goBackBtnListener());
+            screen.dispose();
         }
-        return false;
     }
-
-
+    class deleteSlangBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            HashMap<String, String> currentDict = dictionaryModel.getSlangDictionary();
+            String slang = deleteSlangScreen.getInputSlang();
+            delConfirmScreen.setVisible(true);
+            delConfirmScreen.addGoBackBtnListener(new goBackBtnListener());
+            dictionaryModel.setTempSlang(slang);
+            dictionaryModel.setTempDef(currentDict.get(slang));
+        }
+    }
+    class confirmDelBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String slang = dictionaryModel.getTempSlang();
+            String def = dictionaryModel.getTempDef();
+            deleteSlangScreen.addSlangToTable(slang, def);
+            dictionaryModel.deleteSlang(slang);
+            delConfirmScreen.dispose();
+        }
+    }
+    class resetSlangScreenBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            resetConfirmScreen.setVisible(true);
+            resetConfirmScreen.addGoBackBtnListener(new goBackBtnListener());
+            resetConfirmScreen.addConfirmBtnListener(new resetDictionaryBtnListener());
+//            resetConfirmScreen.dispose();
+        }
+    }
+    class resetDictionaryBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dictionaryModel.setSlangDictionary(dictionaryModel.getOldDictionary());
+            resetConfirmScreen.dispose();
+        }
+    }
+    class randomSlangScreenBtnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            randomSlangScreen.addGoBackBtnListener(new goBackBtnListener());
+            HashMap<String, String> currentDict = dictionaryModel.getSlangDictionary();
+            List<String> keyList = new ArrayList<>(currentDict.keySet());
+            Random random = new Random();
+            String rdSlang = keyList.get(random.nextInt(keyList.size()));
+            String rdDef = currentDict.get(rdSlang);
+            randomSlangScreen.setTextContent(rdSlang, rdDef);
+            randomSlangScreen.setVisible(true);
+        }
+    }
     public static void main(String[] args) {
         SlangDictionaryScreen screen = new SlangDictionaryScreen();
         SlangDictionary dictionaryModel = new SlangDictionary();
         SearchSlangScreen searchSlangScreen = new SearchSlangScreen();
         SearchSlangScreen searchDefinitionScreen = new SearchSlangScreen();
         HistoryScreen historyScreen = new HistoryScreen();
-        AddAndEditSlangScreen addSlangScreen = new AddAndEditSlangScreen("add");
-        AddAndEditSlangScreen editSlangScreen = new AddAndEditSlangScreen("edit");
-        ConfirmScreen delConfirmScreen = new ConfirmScreen("confirmDel");
-        ConfirmScreen duplicateScreen = new ConfirmScreen("duplicateSlang");
+        ModifySlangScreen addSlangScreen = new ModifySlangScreen("add");
+        ModifySlangScreen editSlangScreen = new ModifySlangScreen("edit");
+        ModifySlangScreen deleteSlangScreen = new ModifySlangScreen("delete");
+        AlertScreen delConfirmScreen = new AlertScreen("confirmDel");
+        AlertScreen duplicateScreen = new AlertScreen("duplicateSlang");
+        AlertScreen resetConfirmScreen = new AlertScreen("confirmReset");
+        AlertScreen randomSlangScreen = new AlertScreen("randomSlang");
         SlangDictionaryController controller = new SlangDictionaryController(screen, dictionaryModel,
                                                     searchSlangScreen, searchDefinitionScreen,
                                                     historyScreen, addSlangScreen, editSlangScreen,
-                                                    delConfirmScreen, duplicateScreen);
+                                                    deleteSlangScreen, delConfirmScreen, duplicateScreen,
+                                                    resetConfirmScreen, randomSlangScreen);
     }
 }
