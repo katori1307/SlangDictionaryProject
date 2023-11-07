@@ -36,6 +36,7 @@ public class AlertScreen extends JFrame {
         headingPn.setSize(300,30);
         headingPn.setLocation(50, 10);
         mainPanel.add(headingPn);
+
         if (!Objects.equals(this.mode, "randomSlang")) {
             JPanel btnPanel = createBtnPanel();
             btnPanel.setSize(300, 150);
@@ -148,13 +149,4 @@ public class AlertScreen extends JFrame {
     public void addGoBackBtnListener(ActionListener listener) {
         goBackBtn.addActionListener(listener);
     }
-
-
-//    public static void main(String[] args) {
-//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                AlertScreen screen = new AlertScreen("randomSlang");
-//            }
-//        });
-//    }
 }
