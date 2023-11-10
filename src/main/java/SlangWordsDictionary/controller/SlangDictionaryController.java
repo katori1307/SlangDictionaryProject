@@ -114,6 +114,7 @@ public class SlangDictionaryController {
             searchDefinitionScreen.dispose();
             historyScreen.dispose();
             addSlangScreen.dispose();
+            duplicateScreen.dispose();
             editSlangScreen.dispose();
             deleteSlangScreen.dispose();
             delConfirmScreen.dispose();
@@ -190,6 +191,7 @@ public class SlangDictionaryController {
         for(Map.Entry<String, String> entry: slangDict.entrySet()) {
             if(Objects.equals(entry.getKey(), inputSlang)) {
                 duplicateScreen.setVisible(true);
+                duplicateScreen.addGoBackBtnListener(new goBackBtnListener());
                 dictionaryModel.setTempSlang(inputSlang);
                 dictionaryModel.setTempDef(inputDef);
                 return;

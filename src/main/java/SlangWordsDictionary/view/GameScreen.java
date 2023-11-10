@@ -24,9 +24,6 @@ public class GameScreen extends JFrame {
     public void setTarget(String _target) {
         target.setText(_target);
     }
-    public String getTarget() {
-        return target.getText();
-    }
     public String getOption_1_Text() {
         return option_1.getText();
     }
@@ -199,14 +196,4 @@ public class GameScreen extends JFrame {
     public void addGoBackBtnListener(ActionListener listener) {
         goBackBtn.addActionListener(listener);
     }
-
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                GameScreen mainScreen = new GameScreen("guessDef");
-            }
-        });
-    }
-
-
 }

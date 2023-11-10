@@ -20,7 +20,7 @@ public class Main {
         AlertScreen randomSlangScreen = new AlertScreen("randomSlang");
         GameScreen guessSlangScreen = new GameScreen("guessSlang");
         GameScreen guessDefScreen = new GameScreen("guessDef");
-        SlangDictionaryController controller = new SlangDictionaryController(screen, dictionaryModel,
+        new SlangDictionaryController(screen, dictionaryModel,
                 searchSlangScreen, searchDefinitionScreen,
                 historyScreen, addSlangScreen, editSlangScreen,
                 deleteSlangScreen, delConfirmScreen, duplicateScreen,

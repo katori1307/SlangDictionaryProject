@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 public class SlangDictionaryScreen extends JFrame {
-    private SearchSlangScreen searchScreen;
     private JButton searchSlangButton;
     private JButton searchDefinitionButton;
     private JButton showHistoryButton;
@@ -104,9 +103,6 @@ public class SlangDictionaryScreen extends JFrame {
     }
     public void addSearchSlangScreenBtnListener(ActionListener listener) {
         searchSlangButton.addActionListener(listener);
-    }
-    public void getSearchBtnActionListener(ActionListener listener) {
-        searchScreen.addSearchBtnListener(listener);
     }
     public void addSearchDefinitionScreenBtnListener(ActionListener listener) {
         searchDefinitionButton.addActionListener(listener);
