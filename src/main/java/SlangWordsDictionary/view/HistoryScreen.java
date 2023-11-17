@@ -82,13 +82,4 @@ public class HistoryScreen extends JFrame {
     public void addGoBackBtnListener(ActionListener listener) {
         goBackBtn.addActionListener(listener);
     }
-
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                HistoryScreen screen = new HistoryScreen();
-            }
-        });
-    }
-
 }

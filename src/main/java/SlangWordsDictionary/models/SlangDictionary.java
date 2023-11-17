@@ -80,7 +80,7 @@ public class SlangDictionary {
         slangHistory = new ArrayList<>();
         defHistory = new ArrayList<>();
         // load data from slang.txt
-        loadDataFromTextFile("./src/main/java/data/slang.txt");
+        loadDataFromTextFile("slang.txt");
     }
 
     private void loadDataFromTextFile(String filePath) {
@@ -104,10 +104,10 @@ public class SlangDictionary {
         }
     }
 
-    public static void main(String[] args) {
-        SlangDictionary slangDictionary = new SlangDictionary();
-//        System.out.println(System.getProperty("user.dir"));
-    }
+//    public static void main(String[] args) {
+//        SlangDictionary slangDictionary = new SlangDictionary();
+////        System.out.println(System.getProperty("user.dir"));
+//    }
 
 
 
